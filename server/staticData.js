@@ -2,12 +2,20 @@ const books = [
 	{
 		id: 1,
 		name: ' De men phieu luu ky',
-		genre: 'adventure'
+		genre: 'adventure',
+		authorId: 1
 	},
 	{
 		id: 2,
 		name: 'lam giau khong kho',
-		genre: 'education'
+		genre: 'education',
+		authorId: 2
+	},
+	{
+		id: 3,
+		name: 'Yeu em tu cai nhin dau tien',
+		genre: 'love',
+		authorId: 2
 	}
 ];
 
@@ -23,7 +31,7 @@ const authors = [
 		age: 103
 	},
 	{
-		id: 1,
+		id: 3,
 		name: 'Vu Trong Phung',
 		age: 106
 	}
