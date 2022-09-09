@@ -1,30 +1,39 @@
 const { authors, books } = require('../staticData');
+const Books = require('../models/Book');
+const Authors = require('../models/Author');
+
 const resolvers = {
 	// query
 	Query: {
-		books: () => books,
-		book: (parent, args) => {
-			return books.find((book) => book.id == args.id);
+		books: async () => await Books.find({}),
+		book: async (parent, args) => {
+			return await Books.findById(args.id);
 		},
-		authors: () => authors,
-		author: (parent, args) => {
-			return authors.find((author) => author.id == args.id);
+		authors: async () => Authors.find({}),
+		author: async (parent, args) => {
+			return await Authors.findById(args.id);
 		}
 	},
 	Book: {
-		author: (parent, args) => {
-			return authors.find((author) => author.id == parent.authorId);
+		author: async (parent, args) => {
+			return await Authors.findOne({ authorId: parent._id });
 		}
 	},
 	Author: {
-		books: (parent, args) => {
-			return books.filter((book) => book.authorId == parent.id);
+		books: async (parent, args) => {
+			return await Books.find({ authorId: parent._id });
 		}
 	},
 	// mutation
 	Mutation: {
-		createAuthor: (parent, args) => args,
-		createBook: (parent, args) => args
+		createAuthor: async (parent, args) => {
+			let newAuthor = await Authors.create({ ...args });
+			return newAuthor;
+		},
+		createBook: async (parent, args) => {
+			let newBook = await Books.create({ ...args });
+			return newBook;
+		}
 	}
 };
 
