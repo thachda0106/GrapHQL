@@ -1,37 +1,38 @@
 const { authors, books } = require('../staticData');
 const Books = require('../models/Book');
 const Authors = require('../models/Author');
-
 const resolvers = {
 	// query
 	Query: {
-		books: async () => await Books.find({}),
-		book: async (parent, args) => {
-			return await Books.findById(args.id);
+		books: async (parent, args, { mdbQuery }) => {
+			return await mdbQuery.findAllBooks();
 		},
-		authors: async () => Authors.find({}),
-		author: async (parent, args) => {
-			return await Authors.findById(args.id);
+		book: async (parent, args, { mdbQuery }) => {
+			return await mdbQuery.findBookById(args.id);
+		},
+		authors: async (parent, args, { mdbQuery }) => await mdbQuery.findAllAuthors(),
+		author: async (parent, args, { mdbQuery }) => {
+			return await mdbQuery.findAuthorById(args.id);
 		}
 	},
 	Book: {
-		author: async (parent, args) => {
-			return await Authors.findOne({ authorId: parent._id });
+		author: async (parent, args, { mdbQuery }) => {
+			return await mdbQuery.findAuthorById(parent.authorId);
 		}
 	},
 	Author: {
-		books: async (parent, args) => {
-			return await Books.find({ authorId: parent._id });
+		books: async (parent, args, { mdbQuery }) => {
+			return await mdbQuery.findBooksByAuthorId(parent._id);
 		}
 	},
 	// mutation
 	Mutation: {
-		createAuthor: async (parent, args) => {
-			let newAuthor = await Authors.create({ ...args });
+		createAuthor: async (parent, args, { mdbQuery }) => {
+			let newAuthor = await mdbQuery.createAuthor(args);
 			return newAuthor;
 		},
-		createBook: async (parent, args) => {
-			let newBook = await Books.create({ ...args });
+		createBook: async (parent, args, { mdbQuery }) => {
+			let newBook = await mdbQuery.createBook(args);
 			return newBook;
 		}
 	}
