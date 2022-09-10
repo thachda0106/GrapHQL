@@ -4,7 +4,7 @@ const { ApolloServer } = require('apollo-server-express');
 
 const typeDefs = require('./schema/schema');
 const resolvers = require('./resolver/resolvers');
-
+const mdbQuery = require('./DBQuery');
 const connectDB = async () => {
 	try {
 		await mongoose.connect(
@@ -23,7 +23,8 @@ async function startApolloServer(typeDefs, resolvers) {
 
 	const server = new ApolloServer({
 		typeDefs,
-		resolvers
+		resolvers,
+		context: () => ({ mdbQuery })
 	});
 
 	await server.start();
